@@ -6,7 +6,7 @@ SPEC_BEGIN(ConstraintFormatterSpec)
 describe(@"#buildConstraintsWithFormats:forView:", ^{
   ConstraintFormatter *formatter = [[ConstraintFormatter alloc] init];
   
-  describe(@"constrain attributes of 2 views", ^{
+  describe(@"constrain 2 views", ^{
     UIView *view1 = UIView.new;
     UIView *view2 = UIView.new;
     id views = @{@"view1": view1, @"view2": view2};

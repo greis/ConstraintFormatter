@@ -2,54 +2,107 @@
 #import "RegexKitLite.h"
 #import <UIKit/UIKit.h>
 
+@interface ConstraintContext : NSObject
+
+@property(nonatomic) NSString *view1Name;
+@property(nonatomic) NSLayoutAttribute *view1Attribute;
+@property(nonatomic) NSLayoutRelation *relation;
+@property(nonatomic) NSString *view2Name;
+@property(nonatomic) NSLayoutAttribute *view2Attribute;
+@property(nonatomic) CGFloat multiplier;
+@property(nonatomic) CGFloat constant;
+
+@end
+
+@implementation ConstraintContext
+
+@end
+
 @implementation ConstraintFormatter
 
 -(NSArray *)buildConstraintsWithFormats:(NSArray *)formats forView:(NSDictionary *)views {
   
   NSMutableArray *finalConstraints = [NSMutableArray array];
   
-  NSString *numberRegex = @"\\d+(?:\\.\\d+)?";
-  
-  NSString *relation = [self.layoutRelations.allKeys componentsJoinedByString:@"|"];
-  NSString *attribute1 = @"(\\w+\\.\\w+)";
-  NSString *attribute2 = [NSString stringWithFormat:@"(\\w+\\.\\w+(?: \\* %@)?(?: [+-] %@)?)", numberRegex, numberRegex];
-  
-  NSString *regex = [NSString stringWithFormat:@"%@ (%@) %@", attribute1, relation, attribute2];
+  NSString *regex = [self regexFor:@"(<view1>\\.<attr1>) (<relation>) (<view2>\\.<attr2>( <operator> <number>)*|<number>)"];
   
   for (NSString *visualFormat in formats) {
     
-    NSRange range = [visualFormat rangeOfString:regex options:NSRegularExpressionSearch];
-    if (range.location != NSNotFound) {
-      NSString *view1String = [visualFormat stringByMatching:regex capture:1];
-      NSString *relationString = [visualFormat stringByMatching:regex capture:2];
-      NSString *view2String = [visualFormat stringByMatching:regex capture:3];
+    NSDictionary *match = [visualFormat dictionaryByMatchingRegex:regex withKeysAndCaptures:@"term1", 1, @"relation", 2, @"term2", 3, nil];
+    if (match != nil) {
       
-      NSString *attribute1Regex = @"(\\w+)\\.(\\w+)";
-      NSString *view1Name = [view1String stringByMatching:attribute1Regex capture:1];
-      NSString *view1Attrbute = [view1String stringByMatching:attribute1Regex capture:2];
-      UIView *view1 = views[view1Name];
-      NSLayoutAttribute layoutAttribute1 = [self layoutAttributeByString:view1Attrbute];
+      ConstraintContext *context = [ConstraintContext new];
       
-      NSString *attribute2Regex = [NSString stringWithFormat:@"(\\w+)\\.(\\w+)(?: \\* (%@))?(?: ([+-]) (%@))?", numberRegex, numberRegex];
-      NSString *view2Name = [view2String stringByMatching:attribute2Regex capture:1];
-      NSString *view2Attrbute = [view2String stringByMatching:attribute2Regex capture:2];
-      NSString *multiplierString = [view2String stringByMatching:attribute2Regex capture:3];
-      NSString *constantOperator = [view2String stringByMatching:attribute2Regex capture:4];
-      NSString *constantString = [view2String stringByMatching:attribute2Regex capture:5];
-      UIView *view2 = views[view2Name];
-      NSLayoutAttribute layoutAttribute2 = [self layoutAttributeByString:view2Attrbute];
+      [self parseTerm1:match[@"term1"] context:context];
+      [self parseRelation:match[@"relation"] context:context];
+      [self parseTerm2:match[@"term2"] context:context];
       
-      NSLayoutRelation relation = [self layoutRelationByString:relationString];
-      CGFloat multiplier = multiplierString ? [multiplierString floatValue] : 1;
-      CGFloat constant = constantString ? [[constantOperator stringByAppendingString:constantString] floatValue]: 0;
       
-      [finalConstraints addObject:[NSLayoutConstraint constraintWithItem:view1 attribute:layoutAttribute1 relatedBy:relation toItem:view2 attribute:layoutAttribute2 multiplier:multiplier constant:constant]];
+      [finalConstraints addObject:
+       [NSLayoutConstraint constraintWithItem:views[context.view1Name]
+                                    attribute:context.view1Attribute
+                                    relatedBy:context.relation
+                                       toItem:views[context.view2Name]
+                                    attribute:context.view2Attribute
+                                   multiplier:context.multiplier
+                                     constant:context.constant]];
     } else {
       [finalConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:visualFormat options:0 metrics:nil views:views]];
     }
   }
   
   return finalConstraints;
+}
+
+-(void)parseTerm1:(NSString *)term1 context:(ConstraintContext *)context {
+  NSDictionary *match = [term1 dictionaryByMatchingRegex:[self regexFor:@"(<view1>)\\.(<attr1>)"] withKeysAndCaptures:@"viewName", 1, @"attribute", 2, nil];
+  NSLayoutAttribute layoutAttribute = [self layoutAttributeByString:match[@"attribute"]];
+  [context setView1Name:match[@"viewName"]];
+  [context setView1Attribute:layoutAttribute];
+}
+
+-(void)parseRelation:(NSString *)relation context:(ConstraintContext *)context {
+  [context setRelation:[self layoutRelationByString:relation]];
+}
+
+-(void)parseTerm2:(NSString *)term2 context:(ConstraintContext *)context {
+  NSDictionary *match = [term2 dictionaryByMatchingRegex:[self regexFor:@"(<view2>)\\.(<attr2>)(( <operator> <number>)*)"] withKeysAndCaptures:@"viewName", 1, @"attribute", 2, @"operators", 3, nil];
+  
+   NSLayoutAttribute layoutAttribute2 = [self layoutAttributeByString:match[@"attribute"]];
+  [context setView2Name:match[@"viewName"]];
+  [context setView2Attribute:layoutAttribute2];
+  
+  NSArray *operators = [match[@"operators"] arrayOfDictionariesByMatchingRegex:[self regexFor:@" (<operator>) (<number>)"] withKeysAndCaptures:@"operator", 1, @"number", 2, nil];
+  
+  CGFloat multiplier = 1;
+  CGFloat constant = 0;
+  for (NSDictionary *operator in operators) {
+    if ([operator[@"operator"] isEqualToString:@"*"]) {
+      multiplier = [operator[@"number"] floatValue];
+    } else {
+      constant = [[operator[@"operator"] stringByAppendingString:operator[@"number"]] floatValue];
+    }
+  }
+  
+  [context setMultiplier:multiplier];
+  [context setConstant:constant];
+}
+
+-(NSString *)regexFor:(NSString *)string {
+  NSDictionary *replacements = @{
+                      @"<view1>": @"\\w+",
+                      @"<attr1>": @"\\w+",
+                      @"<view2>": @"\\w+",
+                      @"<attr2>": @"\\w+",
+                      @"<relation>": [self.layoutRelations.allKeys componentsJoinedByString:@"|"],
+                      @"<operator>": @"[*+-]",
+                      @"<number>": @"\\d+(?:\\.\\d+)?"
+                      };
+  
+  for (NSString *key in replacements.allKeys) {
+    string = [string stringByReplacingOccurrencesOfString:key withString:replacements[key]];
+  }
+  return string;
 }
 
 -(NSDictionary *)layoutAttributes {
