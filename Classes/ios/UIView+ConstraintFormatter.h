@@ -1,6 +1,6 @@
 #import <UIKit/UIKit.h>
 
-@interface UIView (VisualConstraints)
+@interface UIView (ConstraintFormatter)
 
 -(NSArray *)addVisualConstraints:(NSArray *)constraints views:(NSDictionary *)views metrics:(NSDictionary *)metrics;
 
