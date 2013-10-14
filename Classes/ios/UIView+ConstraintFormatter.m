@@ -5,6 +5,10 @@
 
 -(NSArray *)addVisualConstraints:(NSArray *)formats views:(NSDictionary *)views metrics:(NSDictionary *)metrics {
   
+  for (UIView* view in views.allValues) {
+    [view setTranslatesAutoresizingMaskIntoConstraints:NO];
+  }
+  
   ConstraintFormatter *formatter = [[ConstraintFormatter alloc] init];
   
   NSArray *finalConstraints = [formatter buildConstraintsWithFormats:formats forView:views];
