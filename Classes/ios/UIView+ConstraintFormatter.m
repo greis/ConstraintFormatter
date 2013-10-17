@@ -11,7 +11,7 @@
   
   ConstraintFormatter *formatter = [[ConstraintFormatter alloc] init];
   
-  NSArray *finalConstraints = [formatter buildConstraintsWithFormats:formats forView:views];
+  NSArray *finalConstraints = [formatter buildConstraintsWithFormats:formats forViews:views withMetrics:metrics];
   
   for (NSLayoutConstraint *constraint in finalConstraints) {
     [self addConstraint:constraint];

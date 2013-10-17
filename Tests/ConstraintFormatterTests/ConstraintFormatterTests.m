@@ -5,25 +5,47 @@ SPEC_BEGIN(ConstraintFormatterSpec)
 
 describe(@"#buildConstraintsWithFormats:forView:", ^{
   ConstraintFormatter *formatter = [[ConstraintFormatter alloc] init];
+  __block id metrics = nil;
   
   describe(@"constrain 1 view", ^{
     UIView *view1 = UIView.new;
     id views = @{@"view1": view1};
     
-    it(@"builds 1 constraint", ^{
-      NSArray *formats = @[@"view1.width == 30"];
-      NSArray *constraints = [formatter buildConstraintsWithFormats:formats forView:views];
-      [[constraints should] haveCountOf:1];
-
-      NSLayoutConstraint *constraint = constraints[0];
-      [[constraint.firstItem should] equal:view1];
-      [[@(constraint.firstAttribute) should] equal:@(NSLayoutAttributeWidth)];
-      [[@(constraint.relation) should] equal:@(NSLayoutRelationEqual)];
-      [[constraint.secondItem should] beNil];
-      [[@(constraint.secondAttribute) should] equal:@(NSLayoutAttributeNotAnAttribute)];
-      [[@(constraint.multiplier) should] equal:@(1)];
-      [[@(constraint.constant) should] equal:@(30)];
+    context(@"with numeric value", ^{
+      it(@"builds 1 constraint", ^{
+        NSArray *formats = @[@"view1.width == 30"];
+        NSArray *constraints = [formatter buildConstraintsWithFormats:formats forViews:views withMetrics:metrics];
+        [[constraints should] haveCountOf:1];
+        
+        NSLayoutConstraint *constraint = constraints[0];
+        [[constraint.firstItem should] equal:view1];
+        [[@(constraint.firstAttribute) should] equal:@(NSLayoutAttributeWidth)];
+        [[@(constraint.relation) should] equal:@(NSLayoutRelationEqual)];
+        [[constraint.secondItem should] beNil];
+        [[@(constraint.secondAttribute) should] equal:@(NSLayoutAttributeNotAnAttribute)];
+        [[@(constraint.multiplier) should] equal:@(1)];
+        [[@(constraint.constant) should] equal:@(30)];
+      });
     });
+    
+    context(@"with metrics", ^{
+      it(@"builds 1 constraint", ^{
+        NSArray *formats = @[@"view1.width == width"];
+        metrics = @{@"width": @(31)};
+        NSArray *constraints = [formatter buildConstraintsWithFormats:formats forViews:views withMetrics:metrics];
+        [[constraints should] haveCountOf:1];
+        
+        NSLayoutConstraint *constraint = constraints[0];
+        [[constraint.firstItem should] equal:view1];
+        [[@(constraint.firstAttribute) should] equal:@(NSLayoutAttributeWidth)];
+        [[@(constraint.relation) should] equal:@(NSLayoutRelationEqual)];
+        [[constraint.secondItem should] beNil];
+        [[@(constraint.secondAttribute) should] equal:@(NSLayoutAttributeNotAnAttribute)];
+        [[@(constraint.multiplier) should] equal:@(1)];
+        [[@(constraint.constant) should] equal:@(31)];
+      });
+    });
+    
     
   });
   
@@ -35,7 +57,7 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
     context(@"without multiplier and constant", ^{
       it(@"builds 1 constraint", ^{
         NSArray *formats = @[@"view1.bottom == view2.top"];
-        NSArray *constraints = [formatter buildConstraintsWithFormats:formats forView:views];
+        NSArray *constraints = [formatter buildConstraintsWithFormats:formats forViews:views withMetrics:metrics];
         [[constraints should] haveCountOf:1];
         
         NSLayoutConstraint *constraint = constraints[0];
@@ -53,7 +75,7 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
       context(@"integer number", ^{
         it(@"builds 1 constraint", ^{
           NSArray *formats = @[@"view1.bottom == view2.top * 2"];
-          NSArray *constraints = [formatter buildConstraintsWithFormats:formats forView:views];
+          NSArray *constraints = [formatter buildConstraintsWithFormats:formats forViews:views withMetrics:metrics];
           [[constraints should] haveCountOf:1];
           
           NSLayoutConstraint *constraint = constraints[0];
@@ -69,7 +91,7 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
       context(@"float number", ^{
         it(@"builds 1 constraint", ^{
           NSArray *formats = @[@"view1.bottom == view2.top * 0.5"];
-          NSArray *constraints = [formatter buildConstraintsWithFormats:formats forView:views];
+          NSArray *constraints = [formatter buildConstraintsWithFormats:formats forViews:views withMetrics:metrics];
           [[constraints should] haveCountOf:1];
           
           NSLayoutConstraint *constraint = constraints[0];
@@ -89,7 +111,7 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
         context(@"integer value", ^{
           it(@"builds 1 constraint", ^{
             NSArray *formats = @[@"view1.bottom == view2.top + 2"];
-            NSArray *constraints = [formatter buildConstraintsWithFormats:formats forView:views];
+            NSArray *constraints = [formatter buildConstraintsWithFormats:formats forViews:views withMetrics:metrics];
             [[constraints should] haveCountOf:1];
             
             NSLayoutConstraint *constraint = constraints[0];
@@ -105,7 +127,7 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
         context(@"float value", ^{
           it(@"builds 1 constraint", ^{
             NSArray *formats = @[@"view1.bottom == view2.top + 2.5"];
-            NSArray *constraints = [formatter buildConstraintsWithFormats:formats forView:views];
+            NSArray *constraints = [formatter buildConstraintsWithFormats:formats forViews:views withMetrics:metrics];
             [[constraints should] haveCountOf:1];
             
             NSLayoutConstraint *constraint = constraints[0];
@@ -122,7 +144,7 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
       context(@"negative constant", ^{
         it(@"builds 1 constraint", ^{
           NSArray *formats = @[@"view1.bottom == view2.top - 2"];
-          NSArray *constraints = [formatter buildConstraintsWithFormats:formats forView:views];
+          NSArray *constraints = [formatter buildConstraintsWithFormats:formats forViews:views withMetrics:metrics];
           [[constraints should] haveCountOf:1];
           
           NSLayoutConstraint *constraint = constraints[0];
@@ -135,12 +157,29 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
           [[@(constraint.constant) should] equal:@(-2)];
         });
       });
+      context(@"metric constant", ^{
+        it(@"builds 1 constraint", ^{
+          NSArray *formats = @[@"view1.bottom == view2.top + margin"];
+          metrics = @{@"margin": @(10)};
+          NSArray *constraints = [formatter buildConstraintsWithFormats:formats forViews:views withMetrics:metrics];
+          [[constraints should] haveCountOf:1];
+          
+          NSLayoutConstraint *constraint = constraints[0];
+          [[constraint.firstItem should] equal:view1];
+          [[@(constraint.firstAttribute) should] equal:@(NSLayoutAttributeBottom)];
+          [[@(constraint.relation) should] equal:@(NSLayoutRelationEqual)];
+          [[constraint.secondItem should] equal:view2];
+          [[@(constraint.secondAttribute) should] equal:@(NSLayoutAttributeTop)];
+          [[@(constraint.multiplier) should] equal:@(1)];
+          [[@(constraint.constant) should] equal:@(10)];
+        });
+      });
     });
     
     context(@"with multiplier and constant", ^{
       it(@"builds 1 constraint", ^{
         NSArray *formats = @[@"view1.bottom == view2.top * 2 + 3"];
-        NSArray *constraints = [formatter buildConstraintsWithFormats:formats forView:views];
+        NSArray *constraints = [formatter buildConstraintsWithFormats:formats forViews:views withMetrics:metrics];
         [[constraints should] haveCountOf:1];
         
         NSLayoutConstraint *constraint = constraints[0];

@@ -2,6 +2,6 @@
 
 @interface ConstraintFormatter : NSObject
 
--(NSArray *)buildConstraintsWithFormats:(NSArray *)formats forView:(NSDictionary *)views;
+-(NSArray *)buildConstraintsWithFormats:(NSArray *)formats forViews:(NSDictionary *)views withMetrics:(NSDictionary *)metrics;
 
 @end

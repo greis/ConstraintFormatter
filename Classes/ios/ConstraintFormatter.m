@@ -11,6 +11,7 @@
 @property(nonatomic) NSLayoutAttribute *view2Attribute;
 @property(nonatomic) CGFloat multiplier;
 @property(nonatomic) CGFloat constant;
+@property(nonatomic) NSDictionary *metrics;
 
 @end
 
@@ -20,11 +21,11 @@
 
 @implementation ConstraintFormatter
 
--(NSArray *)buildConstraintsWithFormats:(NSArray *)formats forView:(NSDictionary *)views {
+-(NSArray *)buildConstraintsWithFormats:(NSArray *)formats forViews:(NSDictionary *)views withMetrics:(NSDictionary *)metrics {
   
   NSMutableArray *finalConstraints = [NSMutableArray array];
   
-  NSString *regex = [self regexFor:@"^(<view1>\\.<attr1>) (<relation>) (<view2>\\.<attr2>( <operator> <number>)*|<number>)$"];
+  NSString *regex = [self regexFor:@"^(<view1>\\.<attr1>) (<relation>) (<view2>\\.<attr2>( <operator> <metric>)*|<metric>)$"];
   
   for (NSString *visualFormat in formats) {
     
@@ -32,11 +33,11 @@
     if (match != nil) {
       
       ConstraintContext *context = [ConstraintContext new];
+      [context setMetrics:metrics];
       
       [self parseTerm1:match[@"term1"] context:context];
       [self parseRelation:match[@"relation"] context:context];
       [self parseTerm2:match[@"term2"] context:context];
-      
       
       [finalConstraints addObject:
        [NSLayoutConstraint constraintWithItem:views[context.view1Name]
@@ -47,7 +48,7 @@
                                    multiplier:context.multiplier
                                      constant:context.constant]];
     } else {
-      [finalConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:visualFormat options:0 metrics:nil views:views]];
+      [finalConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:visualFormat options:0 metrics:metrics views:views]];
     }
   }
   
@@ -68,23 +69,26 @@
 -(void)parseTerm2:(NSString *)term2 context:(ConstraintContext *)context {
   CGFloat multiplier = 1;
   CGFloat constant = 0;
-  if ([term2 isMatchedByRegex:[self regexFor:@"^<number>$"]]) {
-    constant = [term2 floatValue];
+  if ([term2 isMatchedByRegex:[self regexFor:@"^<metric>$"]]) {
+    constant = [self parseMetric:term2 withContext:context];
     [context setView2Attribute:NSLayoutAttributeNotAnAttribute];
   } else {
-    NSDictionary *match = [term2 dictionaryByMatchingRegex:[self regexFor:@"^(<view2>)\\.(<attr2>)(( <operator> <number>)*)$"] withKeysAndCaptures:@"viewName", 1, @"attribute", 2, @"operators", 3, nil];
+    NSDictionary *match = [term2 dictionaryByMatchingRegex:[self regexFor:@"^(<view2>)\\.(<attr2>)(( <operator> <metric>)*)$"] withKeysAndCaptures:@"viewName", 1, @"attribute", 2, @"operators", 3, nil];
     
     NSLayoutAttribute layoutAttribute2 = [self layoutAttributeByString:match[@"attribute"]];
     [context setView2Name:match[@"viewName"]];
     [context setView2Attribute:layoutAttribute2];
     
-    NSArray *operators = [match[@"operators"] arrayOfDictionariesByMatchingRegex:[self regexFor:@" (<operator>) (<number>)"] withKeysAndCaptures:@"operator", 1, @"number", 2, nil];
+    NSArray *operators = [match[@"operators"] arrayOfDictionariesByMatchingRegex:[self regexFor:@" (<operator>) (<metric>)"] withKeysAndCaptures:@"operator", 1, @"metric", 2, nil];
     
     for (NSDictionary *operator in operators) {
+      float value = [self parseMetric:operator[@"metric"] withContext:context];
       if ([operator[@"operator"] isEqualToString:@"*"]) {
-        multiplier = [operator[@"number"] floatValue];
-      } else {
-        constant = [[operator[@"operator"] stringByAppendingString:operator[@"number"]] floatValue];
+        multiplier = value;
+      } else if ([operator[@"operator"] isEqualToString:@"+"]) {
+        constant = value;
+      } else if ([operator[@"operator"] isEqualToString:@"-"]) {
+        constant = -value;
       }
     }
   }
@@ -93,7 +97,16 @@
   [context setConstant:constant];
 }
 
+-(float)parseMetric:(NSString *)string withContext:(ConstraintContext *)context {
+  if ([string isMatchedByRegex:[self regexFor:@"^<number>$"]]) {
+    return [string floatValue];
+  } else {
+    return [context.metrics[string] floatValue];
+  }
+}
+
 -(NSString *)regexFor:(NSString *)string {
+  NSString *number = @"\\d+(?:\\.\\d+)?";
   NSDictionary *replacements = @{
                       @"<view1>": @"\\w+",
                       @"<attr1>": @"\\w+",
@@ -101,7 +114,8 @@
                       @"<attr2>": @"\\w+",
                       @"<relation>": [self.layoutRelations.allKeys componentsJoinedByString:@"|"],
                       @"<operator>": @"[*+-]",
-                      @"<number>": @"\\d+(?:\\.\\d+)?"
+                      @"<number>": number,
+                      @"<metric>": [NSString stringWithFormat:@"(?:%@|\\w+)", number]
                       };
   
   for (NSString *key in replacements.allKeys) {
