@@ -24,7 +24,7 @@
   
   NSMutableArray *finalConstraints = [NSMutableArray array];
   
-  NSString *regex = [self regexFor:@"(<view1>\\.<attr1>) (<relation>) (<view2>\\.<attr2>( <operator> <number>)*|<number>)"];
+  NSString *regex = [self regexFor:@"^(<view1>\\.<attr1>) (<relation>) (<view2>\\.<attr2>( <operator> <number>)*|<number>)$"];
   
   for (NSString *visualFormat in formats) {
     
@@ -55,7 +55,7 @@
 }
 
 -(void)parseTerm1:(NSString *)term1 context:(ConstraintContext *)context {
-  NSDictionary *match = [term1 dictionaryByMatchingRegex:[self regexFor:@"(<view1>)\\.(<attr1>)"] withKeysAndCaptures:@"viewName", 1, @"attribute", 2, nil];
+  NSDictionary *match = [term1 dictionaryByMatchingRegex:[self regexFor:@"^(<view1>)\\.(<attr1>)$"] withKeysAndCaptures:@"viewName", 1, @"attribute", 2, nil];
   NSLayoutAttribute layoutAttribute = [self layoutAttributeByString:match[@"attribute"]];
   [context setView1Name:match[@"viewName"]];
   [context setView1Attribute:layoutAttribute];
@@ -66,21 +66,26 @@
 }
 
 -(void)parseTerm2:(NSString *)term2 context:(ConstraintContext *)context {
-  NSDictionary *match = [term2 dictionaryByMatchingRegex:[self regexFor:@"(<view2>)\\.(<attr2>)(( <operator> <number>)*)"] withKeysAndCaptures:@"viewName", 1, @"attribute", 2, @"operators", 3, nil];
-  
-   NSLayoutAttribute layoutAttribute2 = [self layoutAttributeByString:match[@"attribute"]];
-  [context setView2Name:match[@"viewName"]];
-  [context setView2Attribute:layoutAttribute2];
-  
-  NSArray *operators = [match[@"operators"] arrayOfDictionariesByMatchingRegex:[self regexFor:@" (<operator>) (<number>)"] withKeysAndCaptures:@"operator", 1, @"number", 2, nil];
-  
   CGFloat multiplier = 1;
   CGFloat constant = 0;
-  for (NSDictionary *operator in operators) {
-    if ([operator[@"operator"] isEqualToString:@"*"]) {
-      multiplier = [operator[@"number"] floatValue];
-    } else {
-      constant = [[operator[@"operator"] stringByAppendingString:operator[@"number"]] floatValue];
+  if ([term2 isMatchedByRegex:[self regexFor:@"^<number>$"]]) {
+    constant = [term2 floatValue];
+    [context setView2Attribute:NSLayoutAttributeNotAnAttribute];
+  } else {
+    NSDictionary *match = [term2 dictionaryByMatchingRegex:[self regexFor:@"^(<view2>)\\.(<attr2>)(( <operator> <number>)*)$"] withKeysAndCaptures:@"viewName", 1, @"attribute", 2, @"operators", 3, nil];
+    
+    NSLayoutAttribute layoutAttribute2 = [self layoutAttributeByString:match[@"attribute"]];
+    [context setView2Name:match[@"viewName"]];
+    [context setView2Attribute:layoutAttribute2];
+    
+    NSArray *operators = [match[@"operators"] arrayOfDictionariesByMatchingRegex:[self regexFor:@" (<operator>) (<number>)"] withKeysAndCaptures:@"operator", 1, @"number", 2, nil];
+    
+    for (NSDictionary *operator in operators) {
+      if ([operator[@"operator"] isEqualToString:@"*"]) {
+        multiplier = [operator[@"number"] floatValue];
+      } else {
+        constant = [[operator[@"operator"] stringByAppendingString:operator[@"number"]] floatValue];
+      }
     }
   }
   

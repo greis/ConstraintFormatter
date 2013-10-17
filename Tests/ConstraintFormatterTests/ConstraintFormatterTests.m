@@ -6,6 +6,27 @@ SPEC_BEGIN(ConstraintFormatterSpec)
 describe(@"#buildConstraintsWithFormats:forView:", ^{
   ConstraintFormatter *formatter = [[ConstraintFormatter alloc] init];
   
+  describe(@"constrain 1 view", ^{
+    UIView *view1 = UIView.new;
+    id views = @{@"view1": view1};
+    
+    it(@"builds 1 constraint", ^{
+      NSArray *formats = @[@"view1.width == 30"];
+      NSArray *constraints = [formatter buildConstraintsWithFormats:formats forView:views];
+      [[constraints should] haveCountOf:1];
+
+      NSLayoutConstraint *constraint = constraints[0];
+      [[constraint.firstItem should] equal:view1];
+      [[@(constraint.firstAttribute) should] equal:@(NSLayoutAttributeWidth)];
+      [[@(constraint.relation) should] equal:@(NSLayoutRelationEqual)];
+      [[constraint.secondItem should] beNil];
+      [[@(constraint.secondAttribute) should] equal:@(NSLayoutAttributeNotAnAttribute)];
+      [[@(constraint.multiplier) should] equal:@(1)];
+      [[@(constraint.constant) should] equal:@(30)];
+    });
+    
+  });
+  
   describe(@"constrain 2 views", ^{
     UIView *view1 = UIView.new;
     UIView *view2 = UIView.new;
