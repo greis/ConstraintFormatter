@@ -21,7 +21,7 @@
 
 @implementation ConstraintFormatter
 
--(NSArray *)buildConstraintsWithFormats:(NSArray *)formats forViews:(NSDictionary *)views withMetrics:(NSDictionary *)metrics {
+-(NSArray *)buildConstraintsWithFormats:(NSArray *)formats views:(NSDictionary *)views metrics:(NSDictionary *)metrics {
   
   NSMutableArray *finalConstraints = [NSMutableArray array];
   
@@ -154,6 +154,27 @@
 
 -(NSLayoutRelation)layoutRelationByString:(NSString *)string {
   return [self.layoutRelations[string] integerValue];
+}
+
+@end
+
+@implementation UIView (ConstraintFormatterExtension)
+
+-(NSArray *)addConstraintsWithFormats:(NSArray *)formats views:(NSDictionary *)views metrics:(NSDictionary *)metrics {
+  
+  for (UIView* view in views.allValues) {
+    [view setTranslatesAutoresizingMaskIntoConstraints:NO];
+  }
+  
+  ConstraintFormatter *formatter = [[ConstraintFormatter alloc] init];
+  
+  NSArray *finalConstraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+  
+  for (NSLayoutConstraint *constraint in finalConstraints) {
+    [self addConstraint:constraint];
+  }
+  
+  return finalConstraints;
 }
 
 @end
