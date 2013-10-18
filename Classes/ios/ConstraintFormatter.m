@@ -30,7 +30,7 @@
   for (NSString *visualFormat in formats) {
     
     NSDictionary *match = [visualFormat dictionaryByMatchingRegex:regex withKeysAndCaptures:@"term1", 1, @"relation", 2, @"term2", 3, nil];
-    if (match != nil) {
+    if (match.count > 0) {
       
       ConstraintContext *context = [ConstraintContext new];
       [context setMetrics:metrics];

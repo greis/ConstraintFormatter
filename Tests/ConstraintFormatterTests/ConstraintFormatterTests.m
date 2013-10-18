@@ -195,6 +195,29 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
     
   });
   
+  describe(@"visual format", ^{
+    UIView *view1 = UIView.new;
+    UIView *view2 = UIView.new;
+    id views = @{@"view1": view1, @"view2": view2};
+    
+    it(@"builds the constraints", ^{
+      NSArray *formats = @[@"H:[view1]-30-[view2]"];
+      
+      NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+      [[constraints should] haveCountOf:1];
+      
+      NSLayoutConstraint *constraint = constraints[0];
+      [[constraint.firstItem should] equal:view2];
+      [[@(constraint.firstAttribute) should] equal:@(NSLayoutAttributeLeading)];
+      [[@(constraint.relation) should] equal:@(NSLayoutRelationEqual)];
+      [[constraint.secondItem should] equal:view1];
+      [[@(constraint.secondAttribute) should] equal:@(NSLayoutAttributeTrailing)];
+      [[@(constraint.multiplier) should] equal:@(1)];
+      [[@(constraint.constant) should] equal:@(30)];
+    });
+    
+  });
+  
 });
 
 SPEC_END
