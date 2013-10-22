@@ -166,9 +166,12 @@
     [view setTranslatesAutoresizingMaskIntoConstraints:NO];
   }
   
+  NSMutableDictionary *allViews = [NSMutableDictionary dictionaryWithDictionary:views];
+  allViews[@"superview"] = self;
+  
   ConstraintFormatter *formatter = [[ConstraintFormatter alloc] init];
   
-  NSArray *finalConstraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+  NSArray *finalConstraints = [formatter buildConstraintsWithFormats:formats views:allViews metrics:metrics];
   
   for (NSLayoutConstraint *constraint in finalConstraints) {
     [self addConstraint:constraint];

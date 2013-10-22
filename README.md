@@ -13,6 +13,7 @@ It's really verbose to write NSLayoutConstraints based on attributes and with th
 id views = @{@"view1": view1, @"view2": view2};
 id metrics = @{@"margin": @(10)};
 id formats = @[@"view1.bottom == view2.top + margin",
+               @"view1.centerX == superview.centerX",
                @"H:|-margin-[view1]-margin-|",
                @"H:|[view2]|"];
   
@@ -60,4 +61,9 @@ You can mix constants and multipliers:
 You can also write constraints for only 1 view:
 ```objc
 @"view1.width >= 30"
+```
+
+If you want to reference the view which all constraints are being added, just use 'superview':
+```objc
+@"view1.centerX == superview.centerX"
 ```
