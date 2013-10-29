@@ -46,7 +46,6 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
       });
     });
     
-    
   });
   
   describe(@"constrain 2 views", ^{
