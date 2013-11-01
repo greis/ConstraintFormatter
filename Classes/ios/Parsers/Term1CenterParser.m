@@ -5,7 +5,7 @@
 
 -(id)init {
   self = [super init];
-  [self setRegex:[self regexFor:@"^(<view1>)\\.center$"]];
+  [self setRegex:[self regexFor:@"^(<view>)\\.center$"]];
   return self;
 }
 

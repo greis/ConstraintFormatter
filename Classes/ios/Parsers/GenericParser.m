@@ -10,10 +10,8 @@
 -(NSString *)regexFor:(NSString *)string {
   NSString *number = @"\\d+(?:\\.\\d+)?";
   NSDictionary *replacements = @{
-                                 @"<view1>": @"\\w+",
-                                 @"<attr1>": @"\\w+",
-                                 @"<view2>": @"\\w+",
-                                 @"<attr2>": @"\\w+",
+                                 @"<view>": @"\\w+",
+                                 @"<attr>": @"\\w+",
                                  @"<relation>": [self.layoutRelations.allKeys componentsJoinedByString:@"|"],
                                  @"<operator>": @"[*+-]",
                                  @"<number>": number,

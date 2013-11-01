@@ -5,7 +5,7 @@
 
 -(id)init {
   self = [super init];
-  [self setRegex:[self regexFor:@"^(<view1>)\\.(<attr1>)$"]];
+  [self setRegex:[self regexFor:@"^(<view>)\\.(<attr>)$"]];
   return self;
 }
 
