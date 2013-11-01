@@ -15,7 +15,7 @@
   if (match.count > 0) {
     NSLayoutAttribute layoutAttribute2 = [self layoutAttributeByString:match[@"attribute"]];
     [context setView2Name:match[@"viewName"]];
-    [context setView2Attribute:layoutAttribute2];
+    [context addView2Attribute:layoutAttribute2];
     
     NSArray *operators = [match[@"operators"] arrayOfDictionariesByMatchingRegex:[self regexFor:@" (<operator>) (<metric>)"] withKeysAndCaptures:@"operator", 1, @"metric", 2, nil];
     

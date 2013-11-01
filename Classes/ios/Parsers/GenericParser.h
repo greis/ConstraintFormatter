@@ -11,6 +11,6 @@
 -(NSLayoutAttribute)layoutAttributeByString:(NSString *)string;
 -(NSLayoutRelation)layoutRelationByString:(NSString *)string;
 
-@property(nonatomic) NSString *regex;
+@property(nonatomic, copy) NSString *regex;
 
 @end

@@ -3,15 +3,16 @@
 
 @interface ConstraintContext : NSObject
 
-@property(nonatomic) NSString *view1Name;
-@property(nonatomic) NSLayoutAttribute view1Attribute;
+@property(nonatomic, copy) NSString *view1Name;
 @property(nonatomic) NSLayoutRelation relation;
-@property(nonatomic) NSString *view2Name;
-@property(nonatomic) NSLayoutAttribute view2Attribute;
+@property(nonatomic, copy) NSString *view2Name;
 @property(nonatomic) CGFloat multiplier;
 @property(nonatomic) CGFloat constant;
-@property(nonatomic) NSDictionary *metrics;
-@property(nonatomic) NSDictionary *views;
+@property(nonatomic, strong) NSDictionary *metrics;
+@property(nonatomic, strong) NSDictionary *views;
 
 -(NSArray *)constraints;
+
+-(void)addView1Attribute:(NSLayoutAttribute)attribute;
+-(void)addView2Attribute:(NSLayoutAttribute)attribute;
 @end

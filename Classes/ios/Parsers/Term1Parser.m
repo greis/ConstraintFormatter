@@ -14,7 +14,7 @@
   if (match.count > 0) {
     NSLayoutAttribute layoutAttribute = [self layoutAttributeByString:match[@"attribute"]];
     [context setView1Name:match[@"viewName"]];
-    [context setView1Attribute:layoutAttribute];
+    [context addView1Attribute:layoutAttribute];
     return YES;
   } else {
     return NO;
