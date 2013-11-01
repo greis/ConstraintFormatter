@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "GenericParser.h"
 
-@interface MetricParser : GenericParser
+@interface Term2MetricParser : GenericParser
 
 @end

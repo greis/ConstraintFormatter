@@ -2,7 +2,7 @@
 #import "GenericParser.h"
 #import "Term1Parser.h"
 #import "RelationParser.h"
-#import "MetricParser.h"
+#import "Term2MetricParser.h"
 #import "Term2WithOperatorsParser.h"
 #import "Term1CenterParser.h"
 #import "Term2CenterParser.h"
@@ -27,7 +27,7 @@
                                ]];
 
     [self setTerm2Parsers:@[
-                            [[MetricParser alloc] init],
+                            [[Term2MetricParser alloc] init],
                             [[Term2CenterParser alloc] init],
                             [[Term2WithOperatorsParser alloc] init]
                             ]];

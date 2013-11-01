@@ -1,7 +1,7 @@
-#import "MetricParser.h"
+#import "Term2MetricParser.h"
 #import "RegexKitLite.h"
 
-@implementation MetricParser
+@implementation Term2MetricParser
 
 -(id)init {
   self = [super init];
