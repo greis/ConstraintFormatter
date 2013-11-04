@@ -273,6 +273,87 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
       });
     });
     
+    context(@"with size attribute", ^{
+      context(@"without offset", ^{
+        it(@"builds 2 constraints", ^{
+          NSArray *formats = @[@"view1.size == view2.size"];
+          NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+          [[constraints should] haveCountOf:2];
+          
+          NSLayoutConstraint *constraint1 = constraints[0];
+          [[constraint1.firstItem should] equal:view1];
+          [[@(constraint1.firstAttribute) should] equal:@(NSLayoutAttributeWidth)];
+          [[@(constraint1.relation) should] equal:@(NSLayoutRelationEqual)];
+          [[constraint1.secondItem should] equal:view2];
+          [[@(constraint1.secondAttribute) should] equal:@(NSLayoutAttributeWidth)];
+          [[@(constraint1.multiplier) should] equal:@(1)];
+          [[@(constraint1.constant) should] equal:@(0)];
+          
+          NSLayoutConstraint *constraint2 = constraints[1];
+          [[constraint2.firstItem should] equal:view1];
+          [[@(constraint2.firstAttribute) should] equal:@(NSLayoutAttributeHeight)];
+          [[@(constraint2.relation) should] equal:@(NSLayoutRelationEqual)];
+          [[constraint2.secondItem should] equal:view2];
+          [[@(constraint2.secondAttribute) should] equal:@(NSLayoutAttributeHeight)];
+          [[@(constraint2.multiplier) should] equal:@(1)];
+          [[@(constraint2.constant) should] equal:@(0)];
+        });
+      });
+      context(@"with offset", ^{
+        context(@"and positive and negative numbers", ^{
+          it(@"builds 2 constraints", ^{
+            NSArray *formats = @[@"view1.size == view2.size(2, -3)"];
+            NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+            [[constraints should] haveCountOf:2];
+            
+            NSLayoutConstraint *constraint1 = constraints[0];
+            [[constraint1.firstItem should] equal:view1];
+            [[@(constraint1.firstAttribute) should] equal:@(NSLayoutAttributeWidth)];
+            [[@(constraint1.relation) should] equal:@(NSLayoutRelationEqual)];
+            [[constraint1.secondItem should] equal:view2];
+            [[@(constraint1.secondAttribute) should] equal:@(NSLayoutAttributeWidth)];
+            [[@(constraint1.multiplier) should] equal:@(1)];
+            [[@(constraint1.constant) should] equal:@(2)];
+            
+            NSLayoutConstraint *constraint2 = constraints[1];
+            [[constraint2.firstItem should] equal:view1];
+            [[@(constraint2.firstAttribute) should] equal:@(NSLayoutAttributeHeight)];
+            [[@(constraint2.relation) should] equal:@(NSLayoutRelationEqual)];
+            [[constraint2.secondItem should] equal:view2];
+            [[@(constraint2.secondAttribute) should] equal:@(NSLayoutAttributeHeight)];
+            [[@(constraint2.multiplier) should] equal:@(1)];
+            [[@(constraint2.constant) should] equal:@(-3)];
+          });
+        });
+        context(@"and positive and negative metrics", ^{
+          it(@"builds 2 constraints", ^{
+            NSArray *formats = @[@"view1.size == view2.size(offset, -offset)"];
+            metrics = @{@"offset": @(2)};
+            NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+            [[constraints should] haveCountOf:2];
+            
+            NSLayoutConstraint *constraint1 = constraints[0];
+            [[constraint1.firstItem should] equal:view1];
+            [[@(constraint1.firstAttribute) should] equal:@(NSLayoutAttributeWidth)];
+            [[@(constraint1.relation) should] equal:@(NSLayoutRelationEqual)];
+            [[constraint1.secondItem should] equal:view2];
+            [[@(constraint1.secondAttribute) should] equal:@(NSLayoutAttributeWidth)];
+            [[@(constraint1.multiplier) should] equal:@(1)];
+            [[@(constraint1.constant) should] equal:@(2)];
+            
+            NSLayoutConstraint *constraint2 = constraints[1];
+            [[constraint2.firstItem should] equal:view1];
+            [[@(constraint2.firstAttribute) should] equal:@(NSLayoutAttributeHeight)];
+            [[@(constraint2.relation) should] equal:@(NSLayoutRelationEqual)];
+            [[constraint2.secondItem should] equal:view2];
+            [[@(constraint2.secondAttribute) should] equal:@(NSLayoutAttributeHeight)];
+            [[@(constraint2.multiplier) should] equal:@(1)];
+            [[@(constraint2.constant) should] equal:@(-2)];
+          });
+        });
+      });
+    });
+    
   });
   
   describe(@"visual format", ^{

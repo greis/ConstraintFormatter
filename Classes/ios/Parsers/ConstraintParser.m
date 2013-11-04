@@ -6,6 +6,8 @@
 #import "Term2WithOperatorsParser.h"
 #import "Term1CenterParser.h"
 #import "Term2CenterParser.h"
+#import "Term1SizeParser.h"
+#import "Term2SizeParser.h"
 #import "RegexKitLite.h"
 #import "ConstraintContext.h"
 
@@ -19,6 +21,7 @@
     
     [self setTerm1Parsers:@[
                             [[Term1CenterParser alloc] init],
+                            [[Term1SizeParser alloc] init],
                             [[Term1Parser alloc] init]
                             ]];
     
@@ -29,6 +32,7 @@
     [self setTerm2Parsers:@[
                             [[Term2MetricParser alloc] init],
                             [[Term2CenterParser alloc] init],
+                            [[Term2SizeParser alloc] init],
                             [[Term2WithOperatorsParser alloc] init]
                             ]];
   }
