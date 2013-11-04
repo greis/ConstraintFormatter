@@ -5,10 +5,11 @@
 @implementation ConstraintFormatter
 
 -(NSArray *)buildConstraintsWithFormats:(NSArray *)formats views:(NSDictionary *)views metrics:(NSDictionary *)metrics {
+  
+  ConstraintParser *parser = [[ConstraintParser alloc] initWithViews:views metrics:metrics];
   NSMutableArray *finalConstraints = [NSMutableArray array];
   
   for (NSString *visualFormat in formats) {
-    ConstraintParser *parser = [[ConstraintParser alloc] initWithViews:views metrics:metrics];
     [finalConstraints addObjectsFromArray:[parser parse:visualFormat]];
   }
   
