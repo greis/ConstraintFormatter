@@ -354,6 +354,145 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
       });
     });
     
+    context(@"with edges attribute", ^{
+      context(@"without inset", ^{
+        it(@"builds 4 constraints", ^{
+          NSArray *formats = @[@"view1.edges == view2.edges"];
+          NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+          [[constraints should] haveCountOf:4];
+          
+          NSLayoutConstraint *constraint1 = constraints[0];
+          [[constraint1.firstItem should] equal:view1];
+          [[@(constraint1.firstAttribute) should] equal:@(NSLayoutAttributeTop)];
+          [[@(constraint1.relation) should] equal:@(NSLayoutRelationEqual)];
+          [[constraint1.secondItem should] equal:view2];
+          [[@(constraint1.secondAttribute) should] equal:@(NSLayoutAttributeTop)];
+          [[@(constraint1.multiplier) should] equal:@(1)];
+          [[@(constraint1.constant) should] equal:@(0)];
+          
+          NSLayoutConstraint *constraint2 = constraints[1];
+          [[constraint2.firstItem should] equal:view1];
+          [[@(constraint2.firstAttribute) should] equal:@(NSLayoutAttributeLeft)];
+          [[@(constraint2.relation) should] equal:@(NSLayoutRelationEqual)];
+          [[constraint2.secondItem should] equal:view2];
+          [[@(constraint2.secondAttribute) should] equal:@(NSLayoutAttributeLeft)];
+          [[@(constraint2.multiplier) should] equal:@(1)];
+          [[@(constraint2.constant) should] equal:@(0)];
+          
+          NSLayoutConstraint *constraint3 = constraints[2];
+          [[constraint3.firstItem should] equal:view1];
+          [[@(constraint3.firstAttribute) should] equal:@(NSLayoutAttributeBottom)];
+          [[@(constraint3.relation) should] equal:@(NSLayoutRelationEqual)];
+          [[constraint3.secondItem should] equal:view2];
+          [[@(constraint3.secondAttribute) should] equal:@(NSLayoutAttributeBottom)];
+          [[@(constraint3.multiplier) should] equal:@(1)];
+          [[@(constraint3.constant) should] equal:@(0)];
+          
+          NSLayoutConstraint *constraint4 = constraints[3];
+          [[constraint4.firstItem should] equal:view1];
+          [[@(constraint4.firstAttribute) should] equal:@(NSLayoutAttributeRight)];
+          [[@(constraint4.relation) should] equal:@(NSLayoutRelationEqual)];
+          [[constraint4.secondItem should] equal:view2];
+          [[@(constraint4.secondAttribute) should] equal:@(NSLayoutAttributeRight)];
+          [[@(constraint4.multiplier) should] equal:@(1)];
+          [[@(constraint4.constant) should] equal:@(0)];
+        });
+      });
+      context(@"with inset", ^{
+        context(@"and positive and negative numbers", ^{
+          it(@"builds 4 constraints", ^{
+            NSArray *formats = @[@"view1.edges == view2.edges(2, 3, 4, 5)"];
+            NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+            [[constraints should] haveCountOf:4];
+            
+            NSLayoutConstraint *constraint1 = constraints[0];
+            [[constraint1.firstItem should] equal:view1];
+            [[@(constraint1.firstAttribute) should] equal:@(NSLayoutAttributeTop)];
+            [[@(constraint1.relation) should] equal:@(NSLayoutRelationEqual)];
+            [[constraint1.secondItem should] equal:view2];
+            [[@(constraint1.secondAttribute) should] equal:@(NSLayoutAttributeTop)];
+            [[@(constraint1.multiplier) should] equal:@(1)];
+            [[@(constraint1.constant) should] equal:@(2)];
+            
+            NSLayoutConstraint *constraint2 = constraints[1];
+            [[constraint2.firstItem should] equal:view1];
+            [[@(constraint2.firstAttribute) should] equal:@(NSLayoutAttributeLeft)];
+            [[@(constraint2.relation) should] equal:@(NSLayoutRelationEqual)];
+            [[constraint2.secondItem should] equal:view2];
+            [[@(constraint2.secondAttribute) should] equal:@(NSLayoutAttributeLeft)];
+            [[@(constraint2.multiplier) should] equal:@(1)];
+            [[@(constraint2.constant) should] equal:@(3)];
+            
+            NSLayoutConstraint *constraint3 = constraints[2];
+            [[constraint3.firstItem should] equal:view1];
+            [[@(constraint3.firstAttribute) should] equal:@(NSLayoutAttributeBottom)];
+            [[@(constraint3.relation) should] equal:@(NSLayoutRelationEqual)];
+            [[constraint3.secondItem should] equal:view2];
+            [[@(constraint3.secondAttribute) should] equal:@(NSLayoutAttributeBottom)];
+            [[@(constraint3.multiplier) should] equal:@(1)];
+            [[@(constraint3.constant) should] equal:@(-4)];
+            
+            NSLayoutConstraint *constraint4 = constraints[3];
+            [[constraint4.firstItem should] equal:view1];
+            [[@(constraint4.firstAttribute) should] equal:@(NSLayoutAttributeRight)];
+            [[@(constraint4.relation) should] equal:@(NSLayoutRelationEqual)];
+            [[constraint4.secondItem should] equal:view2];
+            [[@(constraint4.secondAttribute) should] equal:@(NSLayoutAttributeRight)];
+            [[@(constraint4.multiplier) should] equal:@(1)];
+            [[@(constraint4.constant) should] equal:@(-5)];
+          });
+        });
+        context(@"and positive and negative metrics", ^{
+          it(@"builds 4 constraints", ^{
+            NSArray *formats = @[@"view1.edges == view2.edges(topInset, leftInset, bottomInset, rightInset)"];
+            metrics = @{@"topInset": @(2),
+                        @"leftInset": @(3),
+                        @"bottomInset": @(4),
+                        @"rightInset": @(5)};
+            NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+            [[constraints should] haveCountOf:4];
+            
+            NSLayoutConstraint *constraint1 = constraints[0];
+            [[constraint1.firstItem should] equal:view1];
+            [[@(constraint1.firstAttribute) should] equal:@(NSLayoutAttributeTop)];
+            [[@(constraint1.relation) should] equal:@(NSLayoutRelationEqual)];
+            [[constraint1.secondItem should] equal:view2];
+            [[@(constraint1.secondAttribute) should] equal:@(NSLayoutAttributeTop)];
+            [[@(constraint1.multiplier) should] equal:@(1)];
+            [[@(constraint1.constant) should] equal:@(2)];
+            
+            NSLayoutConstraint *constraint2 = constraints[1];
+            [[constraint2.firstItem should] equal:view1];
+            [[@(constraint2.firstAttribute) should] equal:@(NSLayoutAttributeLeft)];
+            [[@(constraint2.relation) should] equal:@(NSLayoutRelationEqual)];
+            [[constraint2.secondItem should] equal:view2];
+            [[@(constraint2.secondAttribute) should] equal:@(NSLayoutAttributeLeft)];
+            [[@(constraint2.multiplier) should] equal:@(1)];
+            [[@(constraint2.constant) should] equal:@(3)];
+            
+            NSLayoutConstraint *constraint3 = constraints[2];
+            [[constraint3.firstItem should] equal:view1];
+            [[@(constraint3.firstAttribute) should] equal:@(NSLayoutAttributeBottom)];
+            [[@(constraint3.relation) should] equal:@(NSLayoutRelationEqual)];
+            [[constraint3.secondItem should] equal:view2];
+            [[@(constraint3.secondAttribute) should] equal:@(NSLayoutAttributeBottom)];
+            [[@(constraint3.multiplier) should] equal:@(1)];
+            [[@(constraint3.constant) should] equal:@(-4)];
+            
+            NSLayoutConstraint *constraint4 = constraints[3];
+            [[constraint4.firstItem should] equal:view1];
+            [[@(constraint4.firstAttribute) should] equal:@(NSLayoutAttributeRight)];
+            [[@(constraint4.relation) should] equal:@(NSLayoutRelationEqual)];
+            [[constraint4.secondItem should] equal:view2];
+            [[@(constraint4.secondAttribute) should] equal:@(NSLayoutAttributeRight)];
+            [[@(constraint4.multiplier) should] equal:@(1)];
+            [[@(constraint4.constant) should] equal:@(-5)];
+
+          });
+        });
+      });
+    });
+    
   });
   
   describe(@"visual format", ^{
