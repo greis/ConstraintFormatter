@@ -11,7 +11,7 @@
 
 -(BOOL)parse:(NSString *)term2 context:(ConstraintContext *)context {
   if ([term2 isMatchedByRegex:self.regex]) {
-    [context setConstant:[self parseMetric:term2 withContext:context]];
+    [context addConstant:[self parseMetric:term2 withContext:context]];
     [context addView2Attribute:NSLayoutAttributeNotAnAttribute];
     return YES;
   } else {

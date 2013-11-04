@@ -33,7 +33,7 @@
     }
     
     [context setMultiplier:multiplier];
-    [context setConstant:constant];
+    [context addConstant:constant];
     return YES;
   } else {
     return NO;

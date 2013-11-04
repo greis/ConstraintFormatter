@@ -70,7 +70,7 @@
 -(NSString *)regexForParsers:(NSArray *)parsers {
   NSMutableArray *regexps = [NSMutableArray array];
   for (GenericParser *parser in parsers) {
-    NSString *regex = [parser.regex stringByReplacingOccurrencesOfRegex:@"\\((?!\\?:)" withString:@"(?:"];
+    NSString *regex = [parser.regex stringByReplacingOccurrencesOfRegex:@"([^\\\\]\\((?!\\?:))" withString:@"$1?:"];
     regex = [regex stringByReplacingOccurrencesOfRegex:@"[$^]" withString:@""];
     [regexps addObject:regex];
   }

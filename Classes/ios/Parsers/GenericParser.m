@@ -8,14 +8,14 @@
 }
 
 -(NSString *)regexFor:(NSString *)string {
-  NSString *number = @"\\d+(?:\\.\\d+)?";
+  NSString *number = @"-?\\d+(?:\\.\\d+)?";
   NSDictionary *replacements = @{
                                  @"<view>": @"\\w+",
                                  @"<attr>": @"\\w+",
                                  @"<relation>": [self.layoutRelations.allKeys componentsJoinedByString:@"|"],
                                  @"<operator>": @"[*+-]",
                                  @"<number>": number,
-                                 @"<metric>": [NSString stringWithFormat:@"(?:%@|\\w+)", number]
+                                 @"<metric>": [NSString stringWithFormat:@"(?:%@|-?\\w+)", number]
                                  };
   
   for (NSString *key in replacements.allKeys) {
@@ -60,7 +60,12 @@
   if ([string isMatchedByRegex:[self regexFor:@"^<number>$"]]) {
     return [string floatValue];
   } else {
-    return [context.metrics[string] floatValue];
+    int sign = 1;
+    if ([string characterAtIndex:0] == '-') {
+      sign = -1;
+      string = [string substringFromIndex:1];
+    }
+    return [context.metrics[string] floatValue] * sign;
   }
 }
 

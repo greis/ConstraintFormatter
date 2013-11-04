@@ -7,7 +7,6 @@
 @property(nonatomic) NSLayoutRelation relation;
 @property(nonatomic, copy) NSString *view2Name;
 @property(nonatomic) CGFloat multiplier;
-@property(nonatomic) CGFloat constant;
 @property(nonatomic, strong) NSDictionary *metrics;
 @property(nonatomic, strong) NSDictionary *views;
 
@@ -15,4 +14,5 @@
 
 -(void)addView1Attribute:(NSLayoutAttribute)attribute;
 -(void)addView2Attribute:(NSLayoutAttribute)attribute;
+-(void)addConstant:(CGFloat)constant;
 @end
