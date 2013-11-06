@@ -46,6 +46,34 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
       });
     });
     
+    context(@"with multiple metrics", ^{
+      context(@"size attribute", ^{
+        it(@"builds 2 constraints", ^{
+          NSArray *formats = @[@"view1.size == (20, 30)"];
+          NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+          [[constraints should] haveCountOf:2];
+          
+          NSLayoutConstraint *constraint1 = constraints[0];
+          [[constraint1.firstItem should] equal:view1];
+          [[@(constraint1.firstAttribute) should] equal:@(NSLayoutAttributeWidth)];
+          [[@(constraint1.relation) should] equal:@(NSLayoutRelationEqual)];
+          [[constraint1.secondItem should] beNil];
+          [[@(constraint1.secondAttribute) should] equal:@(NSLayoutAttributeNotAnAttribute)];
+          [[@(constraint1.multiplier) should] equal:@(1)];
+          [[@(constraint1.constant) should] equal:@(20)];
+          
+          NSLayoutConstraint *constraint2 = constraints[1];
+          [[constraint2.firstItem should] equal:view1];
+          [[@(constraint2.firstAttribute) should] equal:@(NSLayoutAttributeHeight)];
+          [[@(constraint2.relation) should] equal:@(NSLayoutRelationEqual)];
+          [[constraint2.secondItem should] beNil];
+          [[@(constraint2.secondAttribute) should] equal:@(NSLayoutAttributeNotAnAttribute)];
+          [[@(constraint2.multiplier) should] equal:@(1)];
+          [[@(constraint2.constant) should] equal:@(30)];
+        });
+      });
+    });
+    
   });
   
   describe(@"constrain 2 views", ^{

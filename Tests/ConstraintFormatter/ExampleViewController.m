@@ -20,16 +20,7 @@
   [super viewDidLoad];
   [self.navigationController.navigationBar setTranslucent:NO];
   
-  UIView *containerView = [[UIView alloc] init];
-  [containerView.layer setBorderColor:[UIColor grayColor].CGColor];
-  [containerView.layer setBorderWidth:1];
-  UILabel *label = [[UILabel alloc] init];
-  [label setFont:[UIFont systemFontOfSize:12]];
-  [label setTextColor:[UIColor grayColor]];
-  [label setText:@"superview"];
-  [label sizeToFit];
-  [containerView addSubview:label];
-  [containerView addConstraintsWithFormats:@[@"label.left == superview.left + 5"] views:@{@"label": label} metrics:nil];
+  UIView *containerView = [self viewWithName:@"superview" color:[UIColor grayColor]];
   [self.view addSubview:containerView];
   
   UILabel *constraintsLabel = [[UILabel alloc]initWithFrame:CGRectZero];

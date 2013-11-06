@@ -10,6 +10,7 @@
 #import "Term2SizeParser.h"
 #import "Term1EdgesParser.h"
 #import "Term2EdgesParser.h"
+#import "Term2MultipleMetricsParser.h"
 #import "RegexKitLite.h"
 #import "ConstraintContext.h"
 
@@ -34,6 +35,7 @@
 
     [self setTerm2Parsers:@[
                             [[Term2MetricParser alloc] init],
+                            [[Term2MultipleMetricsParser alloc] init],
                             [[Term2CenterParser alloc] init],
                             [[Term2SizeParser alloc] init],
                             [[Term2EdgesParser alloc] init],
