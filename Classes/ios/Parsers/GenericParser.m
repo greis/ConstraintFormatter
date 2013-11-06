@@ -13,7 +13,7 @@
                                  @"<view>": @"\\w+",
                                  @"<attr>": @"\\w+",
                                  @"<relation>": [self.layoutRelations.allKeys componentsJoinedByString:@"|"],
-                                 @"<operator>": @"[*+-]",
+                                 @"<operator>": @"[*+-/]",
                                  @"<number>": number,
                                  @"<metric>": [NSString stringWithFormat:@"(?:%@|-?\\w+)", number]
                                  };

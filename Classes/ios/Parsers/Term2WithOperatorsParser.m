@@ -23,12 +23,19 @@
     CGFloat constant = 0;
     for (NSDictionary *operator in operators) {
       float value = [self parseMetric:operator[@"metric"] withContext:context];
-      if ([operator[@"operator"] isEqualToString:@"*"]) {
-        multiplier = value;
-      } else if ([operator[@"operator"] isEqualToString:@"+"]) {
-        constant = value;
-      } else if ([operator[@"operator"] isEqualToString:@"-"]) {
-        constant = -value;
+      switch ([operator[@"operator"] characterAtIndex:0]) {
+        case '*':
+          multiplier = value;
+          break;
+        case '/':
+          multiplier = 1 / value;
+          break;
+        case '+':
+          constant = value;
+          break;
+        case '-':
+          constant = -value;
+          break;
       }
     }
     

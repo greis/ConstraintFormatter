@@ -105,6 +105,41 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
       });
     });
     
+    context(@"with divider", ^{
+      context(@"integer number", ^{
+        it(@"builds 1 constraint", ^{
+          NSArray *formats = @[@"view1.bottom == view2.top / 2"];
+          NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+          [[constraints should] haveCountOf:1];
+          
+          NSLayoutConstraint *constraint = constraints[0];
+          [[constraint.firstItem should] equal:view1];
+          [[@(constraint.firstAttribute) should] equal:@(NSLayoutAttributeBottom)];
+          [[@(constraint.relation) should] equal:@(NSLayoutRelationEqual)];
+          [[constraint.secondItem should] equal:view2];
+          [[@(constraint.secondAttribute) should] equal:@(NSLayoutAttributeTop)];
+          [[@(constraint.multiplier) should] equal:@(0.5)];
+          [[@(constraint.constant) should] equal:@(0)];
+        });
+      });
+      context(@"float number", ^{
+        it(@"builds 1 constraint", ^{
+          NSArray *formats = @[@"view1.bottom == view2.top / 0.5"];
+          NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+          [[constraints should] haveCountOf:1];
+          
+          NSLayoutConstraint *constraint = constraints[0];
+          [[constraint.firstItem should] equal:view1];
+          [[@(constraint.firstAttribute) should] equal:@(NSLayoutAttributeBottom)];
+          [[@(constraint.relation) should] equal:@(NSLayoutRelationEqual)];
+          [[constraint.secondItem should] equal:view2];
+          [[@(constraint.secondAttribute) should] equal:@(NSLayoutAttributeTop)];
+          [[@(constraint.multiplier) should] equal:@(2)];
+          [[@(constraint.constant) should] equal:@(0)];
+        });
+      });
+    });
+    
     context(@"with constant", ^{
       context(@"positive constant", ^{
         context(@"integer value", ^{
