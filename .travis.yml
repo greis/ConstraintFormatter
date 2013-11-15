@@ -1,0 +1,7 @@
+language: objective-c
+before_script:
+  - brew update
+  - brew upgrade xctool
+  - xctool --version
+  - cd Tests; gem install --no-rdoc --no-ri cocoapods; pod install
+script: xctool -workspace ConstraintFormatter.xcworkspace -scheme ConstraintFormatter -sdk iphonesimulator7.0 build test -freshSimulator -freshInstall

@@ -1,6 +1,9 @@
 ConstraintFormatter
 ===================
 
+
+[![Build Status](https://travis-ci.org/greis/ConstraintFormatter.png?branch=master)](https://travis-ci.org/greis/ConstraintFormatter)
+
 ConstraintFormatter is a library to unify visual constraints and constraints based on attributes for Auto Layout.
 
 It's really verbose to write NSLayoutConstraints based on attributes and with this library you can easily write and mix them with visual constraints. Something like this:
