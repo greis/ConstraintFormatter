@@ -90,6 +90,14 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
       });
     });
     
+    context(@"with metric not present in dictionary", ^{
+      it(@"does not build a constraint", ^{
+        NSArray *formats = @[@"view1.width == metricNotPresent"];
+        NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+        [[constraints should] haveCountOf:0];
+      });
+    });
+    
   });
   
   describe(@"constrain 2 views", ^{

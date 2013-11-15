@@ -45,7 +45,13 @@
       sign = -1;
       string = [string substringFromIndex:1];
     }
-    return [context.metrics[string] floatValue] * sign;
+    NSNumber *value = context.metrics[string];
+    if (value) {
+      return [value floatValue] * sign;
+    } else {
+      [context addError:@"Metric %@ not present in dictionary", string];
+      return 0;
+    }
   }
 }
 
