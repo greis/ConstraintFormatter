@@ -62,7 +62,12 @@
     [self executeParsers:self.relationParsers withText:match[@"relation"] context:context];
     [self executeParsers:self.term2Parsers withText:match[@"term2"] context:context];
     
-    return context.constraints;
+    if ([context hasErrors]) {
+      NSLog(@"Invalid constraint: '%@'. Errors: %@", expression, context.errorsMessage);
+      return @[];
+    } else {
+      return context.constraints;
+    }
     
   } else {
     return [NSLayoutConstraint constraintsWithVisualFormat:expression options:0 metrics:self.metrics views:self.views];

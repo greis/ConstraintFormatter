@@ -74,6 +74,22 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
       });
     });
     
+    context(@"with invalid attribute", ^{
+      it(@"does not build a constraint", ^{
+        NSArray *formats = @[@"view1.invalid == 30"];
+        NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+        [[constraints should] haveCountOf:0];
+      });
+    });
+    
+    context(@"with view not present in dictionary", ^{
+      it(@"does not build a constraint", ^{
+        NSArray *formats = @[@"viewNotPresent.width == 30"];
+        NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+        [[constraints should] haveCountOf:0];
+      });
+    });
+    
   });
   
   describe(@"constrain 2 views", ^{
@@ -553,6 +569,22 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
 
           });
         });
+      });
+    });
+    
+    context(@"with invalid attribute", ^{
+      it(@"does not build a constraint", ^{
+        NSArray *formats = @[@"view1.bottom == view2.invalid"];
+        NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+        [[constraints should] haveCountOf:0];
+      });
+    });
+    
+    context(@"with view not present in dictionary", ^{
+      it(@"does not build a constraint", ^{
+        NSArray *formats = @[@"view1.width == viewNotPresent.width"];
+        NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+        [[constraints should] haveCountOf:0];
       });
     });
     

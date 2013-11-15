@@ -8,7 +8,6 @@
 
 -(NSString *)regexFor:(NSString *)string;
 -(float)parseMetric:(NSString *)string withContext:(ConstraintContext *)context;
--(NSLayoutAttribute)layoutAttributeByString:(NSString *)string;
 -(NSLayoutRelation)layoutRelationByString:(NSString *)string;
 
 @property(nonatomic, copy) NSString *regex;

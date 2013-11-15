@@ -12,9 +12,8 @@
 -(BOOL)parse:(NSString *)term1 context:(ConstraintContext *)context {
   NSDictionary *match = [term1 dictionaryByMatchingRegex:self.regex withKeysAndCaptures:@"viewName", 1, @"attribute", 2, nil];
   if (match.count > 0) {
-    NSLayoutAttribute layoutAttribute = [self layoutAttributeByString:match[@"attribute"]];
     [context setView1Name:match[@"viewName"]];
-    [context addView1Attribute:layoutAttribute];
+    [context addView1AttributeByName:match[@"attribute"]];
     return YES;
   } else {
     return NO;

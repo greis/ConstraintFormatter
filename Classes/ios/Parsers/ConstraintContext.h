@@ -13,6 +13,11 @@
 -(NSArray *)constraints;
 
 -(void)addView1Attribute:(NSLayoutAttribute)attribute;
+-(void)addView1AttributeByName:(NSString *)attribute;
 -(void)addView2Attribute:(NSLayoutAttribute)attribute;
+-(void)addView2AttributeByName:(NSString *)attribute;
 -(void)addConstant:(CGFloat)constant;
+-(void)addError:(NSString *)error, ...;
+-(BOOL)hasErrors;
+-(NSString *)errorsMessage;
 @end
