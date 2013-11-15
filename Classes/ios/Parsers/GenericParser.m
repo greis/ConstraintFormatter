@@ -24,32 +24,12 @@
   return string;
 }
 
--(NSDictionary *)layoutAttributes {
-  return  @{
-            @"left": @(NSLayoutAttributeLeft),
-            @"right": @(NSLayoutAttributeRight),
-            @"top": @(NSLayoutAttributeTop),
-            @"bottom": @(NSLayoutAttributeBottom),
-            @"leading": @(NSLayoutAttributeLeading),
-            @"trailing": @(NSLayoutAttributeTrailing),
-            @"width": @(NSLayoutAttributeWidth),
-            @"height": @(NSLayoutAttributeHeight),
-            @"centerX": @(NSLayoutAttributeCenterX),
-            @"centerY": @(NSLayoutAttributeCenterY),
-            @"baseline": @(NSLayoutAttributeBaseline)
-            };
-}
-
 -(NSDictionary *)layoutRelations {
   return @{
            @"<=": @(NSLayoutRelationLessThanOrEqual),
            @"==": @(NSLayoutRelationEqual),
            @">=": @(NSLayoutRelationGreaterThanOrEqual)
            };
-}
-
--(NSLayoutAttribute)layoutAttributeByString:(NSString *)string {
-  return [self.layoutAttributes[string] integerValue];
 }
 
 -(NSLayoutRelation)layoutRelationByString:(NSString *)string {
