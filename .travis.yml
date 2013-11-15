@@ -1,0 +1,10 @@
+language: objective-c
+before_script:
+  - cd Tests; gem install --no-rdoc --no-ri cocoapods; pod install
+script: xctool -workspace ConstraintFormatter.xcworkspace -scheme ConstraintFormatter -sdk iphonesimulator7.0 build test -freshSimulator -freshInstall
+# xcode_workspace: ConstraintFormatter.xcworkspace
+# xcode_scheme: ConstraintFormatter
+# xcode_sdk: iphonesimulator7.0
+notifications:
+  email:
+    - gabriel.oreis@gmail.com
