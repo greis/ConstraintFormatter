@@ -13,6 +13,7 @@
 #import "Term2MultipleMetricsParser.h"
 #import "RegexKitLite.h"
 #import "ConstraintContext.h"
+#import "ConstraintLogger.h"
 
 @implementation ConstraintParser
 
@@ -63,7 +64,7 @@
     [self executeParsers:self.term2Parsers withText:match[@"term2"] context:context];
     
     if ([context hasErrors]) {
-      NSLog(@"Invalid constraint: '%@'. Errors: %@", expression, context.errorsMessage);
+      [ConstraintLogger log:@"Invalid constraint: '%@'. Errors: %@", expression, context.errorsMessage];
       return @[];
     } else {
       return context.constraints;

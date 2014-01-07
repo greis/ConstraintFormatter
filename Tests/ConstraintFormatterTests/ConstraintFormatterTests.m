@@ -1,5 +1,6 @@
 #import "Kiwi.h"
 #import <ConstraintFormatter/ConstraintFormatter.h>
+#import <ConstraintFormatter/ConstraintLogger.h>
 
 SPEC_BEGIN(ConstraintFormatterSpec)
 
@@ -77,6 +78,7 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
     context(@"with invalid attribute", ^{
       it(@"does not build a constraint", ^{
         NSArray *formats = @[@"view1.invalid == 30"];
+        [[ConstraintLogger should] receive:@selector(log:) withArguments:@"Invalid constraint: 'view1.invalid == 30'. Errors: Attribute invalid is invalid"];
         NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
         [[constraints should] haveCountOf:0];
       });
