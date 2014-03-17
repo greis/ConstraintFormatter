@@ -88,6 +88,10 @@
   }
 }
 
+-(void)copyView1AttributesToView2 {
+  [self setView2Attributes:self.view1Attributes.copy];
+}
+
 -(void)addConstant:(CGFloat)constant {
   [self.constants addObject:@(constant)];
 }

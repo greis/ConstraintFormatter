@@ -16,6 +16,7 @@
 -(void)addView1AttributeByName:(NSString *)attribute;
 -(void)addView2Attribute:(NSLayoutAttribute)attribute;
 -(void)addView2AttributeByName:(NSString *)attribute;
+-(void)copyView1AttributesToView2;
 -(void)addConstant:(CGFloat)constant;
 -(void)addError:(NSString *)error, ...;
 -(BOOL)hasErrors;

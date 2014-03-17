@@ -279,6 +279,24 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
       });
     });
     
+    context(@"without setting attribute for second view", ^{
+      
+      it(@"uses the same attribute for the second view", ^{
+        NSArray *formats = @[@"view1.bottom == view2"];
+        NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+        [[constraints should] haveCountOf:1];
+        
+        NSLayoutConstraint *constraint = constraints[0];
+        [[constraint.firstItem should] equal:view1];
+        [[@(constraint.firstAttribute) should] equal:@(NSLayoutAttributeBottom)];
+        [[@(constraint.relation) should] equal:@(NSLayoutRelationEqual)];
+        [[constraint.secondItem should] equal:view2];
+        [[@(constraint.secondAttribute) should] equal:@(NSLayoutAttributeBottom)];
+        [[@(constraint.multiplier) should] equal:@(1)];
+        [[@(constraint.constant) should] equal:@(0)];
+      });
+    });
+    
     context(@"with center attribute", ^{
       context(@"without offset", ^{
         it(@"builds 2 constraints", ^{

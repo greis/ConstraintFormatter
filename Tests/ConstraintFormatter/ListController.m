@@ -23,7 +23,7 @@
   
   self.formats = @{
                  @"Center": @[@"view1.center == superview.center", @"view1.width == 40", @"view1.height == 40", @"view2.center == view1.center(40, 40)", @"view2.width == 40", @"view2.height == 40"],
-                 @"Size": @[@"view1.size == superview.size(-30, -100)", @"view1.center == superview.center", @"view2.size == view1.size", @"view2.center == view1.center(0, 20)"],
+                 @"Size": @[@"view1.size == superview.size(-30, -100)", @"view1.center == superview.center", @"view2.size == view1", @"view2.center == view1.center(0, 20)"],
                  @"Edges": @[@"view1.edges == superview.edges(25, 35, 25, 35)", @"view2.edges == view1.edges(20, 20, 20, 20)"],
                  @"Left": @[@"view1.left == superview.left + 10", @"view2.left == view1.right", @"view1.size == (50, 50)", @"view2.size == view1.size", @"view1.centerY == superview.centerY", @"view2.centerY == superview.centerY"],
                  };
