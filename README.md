@@ -137,3 +137,20 @@ If you want to reference the view which all constraints are being added, just us
 ```objc
 @"view1.centerX == superview.centerX"
 ```
+
+## How to contribute
+
+Fork and clone the repo, then:
+
+```
+gem install cocoapods
+cd Tests
+pod install
+open ConstraintFormatter.xcworkspace
+```
+
+To run the tests, just command+u or go to menu Product -> Test.
+
+To run the example app just command+r or Product -> Run.
+
+To edit the library files just open the Project Navigator and edit the files under Pods -> Development Pods -> ConstraintFormatter
