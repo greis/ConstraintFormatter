@@ -1,12 +1,12 @@
 #import "ConstraintFormatter.h"
 #import <UIKit/UIKit.h>
-#import "ConstraintParser.h"
+#import "CFConstraintParser.h"
 
 @implementation ConstraintFormatter
 
 -(NSArray *)buildConstraintsWithFormats:(NSArray *)formats views:(NSDictionary *)views metrics:(NSDictionary *)metrics {
   
-  ConstraintParser *parser = [[ConstraintParser alloc] initWithViews:views metrics:metrics];
+  CFConstraintParser *parser = [[CFConstraintParser alloc] initWithViews:views metrics:metrics];
   NSMutableArray *finalConstraints = [NSMutableArray array];
   
   for (NSString *visualFormat in formats) {

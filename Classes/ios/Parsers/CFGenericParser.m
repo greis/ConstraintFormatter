@@ -1,9 +1,9 @@
-#import "GenericParser.h"
+#import "CFGenericParser.h"
 #import "RegexKitLite.h"
 
-@implementation GenericParser
+@implementation CFGenericParser
 
--(BOOL)parse:(NSString *)text context:(ConstraintContext *)context {
+-(BOOL)parse:(NSString *)text context:(CFConstraintContext *)context {
   return NO;
 }
 
@@ -36,7 +36,7 @@
   return [self.layoutRelations[string] integerValue];
 }
 
--(float)parseMetric:(NSString *)string withContext:(ConstraintContext *)context {
+-(float)parseMetric:(NSString *)string withContext:(CFConstraintContext *)context {
   if ([string isMatchedByRegex:[self regexFor:@"^<number>$"]]) {
     return [string floatValue];
   } else {

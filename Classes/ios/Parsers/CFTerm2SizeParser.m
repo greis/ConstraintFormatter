@@ -1,7 +1,7 @@
-#import "Term2SizeParser.h"
+#import "CFTerm2SizeParser.h"
 #import "RegexKitLite.h"
 
-@implementation Term2SizeParser
+@implementation CFTerm2SizeParser
 
 -(id)init {
   self = [super init];
@@ -9,7 +9,7 @@
   return self;
 }
 
--(BOOL)parse:(NSString *)term1 context:(ConstraintContext *)context {
+-(BOOL)parse:(NSString *)term1 context:(CFConstraintContext *)context {
   NSDictionary *match = [term1 dictionaryByMatchingRegex:self.regex withKeysAndCaptures:@"viewName", 1, @"widthOffset", 2, @"heightOffset", 3, nil];
   if (match.count > 0) {
     [context setView2Name:match[@"viewName"]];

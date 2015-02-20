@@ -1,7 +1,7 @@
-#import "Term1EdgesParser.h"
+#import "CFTerm1EdgesParser.h"
 #import "RegexKitLite.h"
 
-@implementation Term1EdgesParser
+@implementation CFTerm1EdgesParser
 
 -(id)init {
   self = [super init];
@@ -9,7 +9,7 @@
   return self;
 }
 
--(BOOL)parse:(NSString *)term1 context:(ConstraintContext *)context {
+-(BOOL)parse:(NSString *)term1 context:(CFConstraintContext *)context {
   NSDictionary *match = [term1 dictionaryByMatchingRegex:self.regex withKeysAndCaptures:@"viewName", 1, nil];
   if (match.count > 0) {
     [context setView1Name:match[@"viewName"]];

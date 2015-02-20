@@ -1,13 +1,13 @@
-#import "ConstraintContext.h"
+#import "CFConstraintContext.h"
 
-@interface ConstraintContext ()
+@interface CFConstraintContext ()
 @property(nonatomic) NSMutableArray *view1Attributes;
 @property(nonatomic) NSMutableArray *view2Attributes;
 @property(nonatomic) NSMutableArray *constants;
 @property(nonatomic) NSMutableArray *errors;
 @end
 
-@implementation ConstraintContext
+@implementation CFConstraintContext
 
 - (id)init
 {

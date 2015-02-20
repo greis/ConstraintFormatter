@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface ConstraintParser : NSObject
+@interface CFConstraintParser : NSObject
 
 -(id)initWithViews:(NSDictionary *)views metrics:(NSDictionary *)metrics;
 -(NSArray *)parse:(NSString *)expression;

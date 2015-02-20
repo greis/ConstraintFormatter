@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface ConstraintContext : NSObject
+@interface CFConstraintContext : NSObject
 
 @property(nonatomic, copy) NSString *view1Name;
 @property(nonatomic) NSLayoutRelation relation;

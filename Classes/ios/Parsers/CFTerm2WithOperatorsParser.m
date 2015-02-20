@@ -1,7 +1,7 @@
-#import "Term2WithOperatorsParser.h"
+#import "CFTerm2WithOperatorsParser.h"
 #import "RegexKitLite.h"
 
-@implementation Term2WithOperatorsParser
+@implementation CFTerm2WithOperatorsParser
 
 -(id)init {
   self = [super init];
@@ -9,7 +9,7 @@
   return self;
 }
 
--(BOOL)parse:(NSString *)term2 context:(ConstraintContext *)context {
+-(BOOL)parse:(NSString *)term2 context:(CFConstraintContext *)context {
   NSDictionary *match = [term2 dictionaryByMatchingRegex:self.regex withKeysAndCaptures:@"viewName", 1, @"attribute", 2, @"operators", 3, nil];
   
   if (match.count > 0) {

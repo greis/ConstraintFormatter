@@ -1,7 +1,7 @@
-#import "RelationParser.h"
+#import "CFRelationParser.h"
 #import "RegexKitLite.h"
 
-@implementation RelationParser
+@implementation CFRelationParser
 
 -(id)init {
   self = [super init];
@@ -9,7 +9,7 @@
   return self;
 }
 
--(BOOL)parse:(NSString *)relation context:(ConstraintContext *)context {
+-(BOOL)parse:(NSString *)relation context:(CFConstraintContext *)context {
   if ([relation isMatchedByRegex:self.regex]) {
     [context setRelation:[self layoutRelationByString:relation]];
     return YES;

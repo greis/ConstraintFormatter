@@ -1,21 +1,21 @@
-#import "ConstraintParser.h"
-#import "GenericParser.h"
-#import "Term1Parser.h"
-#import "RelationParser.h"
-#import "Term2MetricParser.h"
-#import "Term2WithOperatorsParser.h"
-#import "Term1CenterParser.h"
-#import "Term2CenterParser.h"
-#import "Term1SizeParser.h"
-#import "Term2SizeParser.h"
-#import "Term1EdgesParser.h"
-#import "Term2EdgesParser.h"
-#import "Term2MultipleMetricsParser.h"
-#import "Term2ViewNameParser.h"
+#import "CFConstraintParser.h"
+#import "CFGenericParser.h"
+#import "CFTerm1Parser.h"
+#import "CFRelationParser.h"
+#import "CFTerm2MetricParser.h"
+#import "CFTerm2WithOperatorsParser.h"
+#import "CFTerm1CenterParser.h"
+#import "CFTerm2CenterParser.h"
+#import "CFTerm1SizeParser.h"
+#import "CFTerm2SizeParser.h"
+#import "CFTerm1EdgesParser.h"
+#import "CFTerm2EdgesParser.h"
+#import "CFTerm2MultipleMetricsParser.h"
+#import "CFTerm2ViewNameParser.h"
 #import "RegexKitLite.h"
-#import "ConstraintContext.h"
+#import "CFConstraintContext.h"
 
-@implementation ConstraintParser
+@implementation CFConstraintParser
 
 -(id)initWithViews:(NSDictionary *)views metrics:(NSDictionary *)metrics {
   self = [super init];
@@ -24,24 +24,24 @@
     [self setMetrics:metrics];
     
     [self setTerm1Parsers:@[
-                            [[Term1CenterParser alloc] init],
-                            [[Term1SizeParser alloc] init],
-                            [[Term1EdgesParser alloc] init],
-                            [[Term1Parser alloc] init]
+                            [[CFTerm1CenterParser alloc] init],
+                            [[CFTerm1SizeParser alloc] init],
+                            [[CFTerm1EdgesParser alloc] init],
+                            [[CFTerm1Parser alloc] init]
                             ]];
     
     [self setRelationParsers:@[
-                               [[RelationParser alloc] init]
+                               [[CFRelationParser alloc] init]
                                ]];
 
     [self setTerm2Parsers:@[
-                            [[Term2ViewNameParser alloc] init],
-                            [[Term2MetricParser alloc] init],
-                            [[Term2MultipleMetricsParser alloc] init],
-                            [[Term2CenterParser alloc] init],
-                            [[Term2SizeParser alloc] init],
-                            [[Term2EdgesParser alloc] init],
-                            [[Term2WithOperatorsParser alloc] init]
+                            [[CFTerm2ViewNameParser alloc] init],
+                            [[CFTerm2MetricParser alloc] init],
+                            [[CFTerm2MultipleMetricsParser alloc] init],
+                            [[CFTerm2CenterParser alloc] init],
+                            [[CFTerm2SizeParser alloc] init],
+                            [[CFTerm2EdgesParser alloc] init],
+                            [[CFTerm2WithOperatorsParser alloc] init]
                             ]];
   }
   return self;
@@ -56,7 +56,7 @@
   NSDictionary *match = [expression dictionaryByMatchingRegex:regex withKeysAndCaptures:@"term1", 1, @"relation", 2, @"term2", 3, nil];
   
   if (match.count) {
-    ConstraintContext *context = [[ConstraintContext alloc] init];
+    CFConstraintContext *context = [[CFConstraintContext alloc] init];
     [context setViews:self.views];
     [context setMetrics:self.metrics];
     
@@ -76,8 +76,8 @@
   }
 }
 
--(void)executeParsers:(NSArray *)parsers withText:(NSString *)text context:(ConstraintContext *)context {
-  for (GenericParser *parser in parsers) {
+-(void)executeParsers:(NSArray *)parsers withText:(NSString *)text context:(CFConstraintContext *)context {
+  for (CFGenericParser *parser in parsers) {
     if ([parser parse:text context:context]) {
       break;
     }
@@ -86,7 +86,7 @@
 
 -(NSString *)regexForParsers:(NSArray *)parsers {
   NSMutableArray *regexps = [NSMutableArray array];
-  for (GenericParser *parser in parsers) {
+  for (CFGenericParser *parser in parsers) {
     NSString *regex = [parser.regex stringByReplacingOccurrencesOfRegex:@"([^\\\\]\\((?!\\?:))" withString:@"$1?:"];
     regex = [regex stringByReplacingOccurrencesOfRegex:@"[$^]" withString:@""];
     [regexps addObject:regex];

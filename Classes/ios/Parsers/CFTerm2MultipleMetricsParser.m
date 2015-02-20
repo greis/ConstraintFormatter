@@ -1,7 +1,7 @@
-#import "Term2MultipleMetricsParser.h"
+#import "CFTerm2MultipleMetricsParser.h"
 #import "RegexKitLite.h"
 
-@implementation Term2MultipleMetricsParser
+@implementation CFTerm2MultipleMetricsParser
 
 -(id)init {
   self = [super init];
@@ -9,7 +9,7 @@
   return self;
 }
 
--(BOOL)parse:(NSString *)term2 context:(ConstraintContext *)context {
+-(BOOL)parse:(NSString *)term2 context:(CFConstraintContext *)context {
   if ([term2 isMatchedByRegex:self.regex]) {
     NSArray *matches = [term2 arrayOfDictionariesByMatchingRegex:[self regexFor:@"(<metric>)"] withKeysAndCaptures:@"metric", 1, nil];
     for (NSDictionary *match in matches) {
