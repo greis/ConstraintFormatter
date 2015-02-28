@@ -89,6 +89,15 @@ To specify values for width and height, provide them inside parenthesis:
 @"view1.size == (50, 50)"
 ```
 
+### Optional
+
+It's optional to specify the attribute if the constraint uses the same attribute in both views:
+```objc
+view1.centerX == view2.centerX
+// is the same as
+view1.centerX == view2
+```
+
 ## Relations
 * ==
 * >=
@@ -136,6 +145,12 @@ You can mix constants and multipliers:
 If you want to reference the view which all constraints are being added, just use 'superview':
 ```objc
 @"view1.centerX == superview.centerX"
+```
+
+## Priority
+Priority of the constraint can be set as the following:
+```objc
+@"view1.width@750 == view2.width"
 ```
 
 ## How to contribute
