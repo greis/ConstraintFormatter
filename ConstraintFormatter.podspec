@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "ConstraintFormatter"
-  s.version      = "1.0.0"
+  s.version      = "1.1.0"
   s.summary      = "A library to unify visual constraints and constraints based on attributes for Auto Layout"
 
   s.description  = <<-DESC
