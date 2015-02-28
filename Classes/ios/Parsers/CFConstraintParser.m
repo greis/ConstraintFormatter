@@ -12,6 +12,7 @@
 #import "CFTerm2EdgesParser.h"
 #import "CFTerm2MultipleMetricsParser.h"
 #import "CFTerm2ViewNameParser.h"
+#import "CFPriorityParser.h"
 #import "RegexKitLite.h"
 #import "CFConstraintContext.h"
 
@@ -29,6 +30,10 @@
                             [[CFTerm1EdgesParser alloc] init],
                             [[CFTerm1Parser alloc] init]
                             ]];
+    
+    [self setPriorityParsers:@[
+                               [[CFPriorityParser alloc] init]
+                               ]];
     
     [self setRelationParsers:@[
                                [[CFRelationParser alloc] init]
@@ -48,21 +53,25 @@
 }
 
 -(NSArray *)parse:(NSString *)expression {
-  NSString *regex = [NSString stringWithFormat:@"^(%@) (%@) (%@)$",
+  NSString *regex = [NSString stringWithFormat:@"^(%@)(%@)? (%@) (%@)$",
                      [self regexForParsers:self.term1Parsers],
+                     [self regexForParsers:self.priorityParsers],
                      [self regexForParsers:self.relationParsers],
                      [self regexForParsers:self.term2Parsers]];
   
-  NSDictionary *match = [expression dictionaryByMatchingRegex:regex withKeysAndCaptures:@"term1", 1, @"relation", 2, @"term2", 3, nil];
+  NSArray *match = [expression captureComponentsMatchedByRegex:regex];
   
-  if (match.count) {
+  if (match.count > 1) {
     CFConstraintContext *context = [[CFConstraintContext alloc] init];
     [context setViews:self.views];
     [context setMetrics:self.metrics];
     
-    [self executeParsers:self.term1Parsers withText:match[@"term1"] context:context];
-    [self executeParsers:self.relationParsers withText:match[@"relation"] context:context];
-    [self executeParsers:self.term2Parsers withText:match[@"term2"] context:context];
+    [self executeParsers:self.term1Parsers withText:match[1] context:context];
+    if (match[2]) {
+      [self executeParsers:self.priorityParsers withText:match[2] context:context];
+    }
+    [self executeParsers:self.relationParsers withText:match[3] context:context];
+    [self executeParsers:self.term2Parsers withText:match[4] context:context];
     
     if ([context hasErrors]) {
       NSLog(@"Invalid constraint: '%@'. Errors: %@", expression, context.errorsMessage);

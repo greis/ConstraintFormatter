@@ -4,6 +4,7 @@
 @interface CFConstraintContext : NSObject
 
 @property(nonatomic, copy) NSString *view1Name;
+@property(nonatomic) CGFloat priority;
 @property(nonatomic) NSLayoutRelation relation;
 @property(nonatomic, copy) NSString *view2Name;
 @property(nonatomic) CGFloat multiplier;

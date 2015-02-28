@@ -33,6 +33,9 @@
     CGFloat constant = [self constantForIndex:i];
     
     NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:view1 attribute:attribute1 relatedBy:self.relation toItem:view2 attribute:attribute2 multiplier:self.multiplier constant:constant];
+    if (self.priority > 0) {
+      [constraint setPriority:self.priority];
+    }
     [constraints addObject:constraint];
   }
   return constraints;

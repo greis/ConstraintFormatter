@@ -74,6 +74,24 @@ describe(@"#buildConstraintsWithFormats:forView:", ^{
       });
     });
     
+    context(@"with prioriry", ^{
+      it(@"builds 1 constraint", ^{
+        NSArray *formats = @[@"view1.width@100 == 30"];
+        NSArray *constraints = [formatter buildConstraintsWithFormats:formats views:views metrics:metrics];
+        [[constraints should] haveCountOf:1];
+        
+        NSLayoutConstraint *constraint = constraints[0];
+        [[constraint.firstItem should] equal:view1];
+        [[@(constraint.firstAttribute) should] equal:@(NSLayoutAttributeWidth)];
+        [[@(constraint.relation) should] equal:@(NSLayoutRelationEqual)];
+        [[constraint.secondItem should] beNil];
+        [[@(constraint.secondAttribute) should] equal:@(NSLayoutAttributeNotAnAttribute)];
+        [[@(constraint.multiplier) should] equal:@(1)];
+        [[@(constraint.constant) should] equal:@(30)];
+        [[@(constraint.priority) should] equal:@(100)];
+      });
+    });
+    
     context(@"with invalid attribute", ^{
       it(@"does not build a constraint", ^{
         NSArray *formats = @[@"view1.invalid == 30"];
