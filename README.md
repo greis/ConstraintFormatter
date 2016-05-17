@@ -169,3 +169,10 @@ To run the tests, just command+u or go to menu Product -> Test.
 To run the example app just command+r or Product -> Run.
 
 To edit the library files just open the Project Navigator and edit the files under Pods -> Development Pods -> ConstraintFormatter
+
+
+## About
+
+[![Hashrocket logo](https://hashrocket.com/hashrocket_logo.svg)](https://hashrocket.com)
+
+ConstraintFormatter is supported by the team at [Hashrocket](https://hashrocket.com), a multidisciplinary design & development consultancy. If you'd like to [work with us](https://hashrocket.com/contact-us/hire-us) or [join our team](https://hashrocket.com/contact-us/jobs), don't hesitate to get in touch.
